@@ -1,0 +1,1 @@
+These are lists of manually chosen isolates after looking at biofilm and growth. Can't remember why exactly I chose these, but the inhibitory ones were all the ones that met qualifications. The non-inhib is a shortened list.
