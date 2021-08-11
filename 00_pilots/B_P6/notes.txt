@@ -1,0 +1,52 @@
+# 15aug2020
+none of the bd plates grew :( So I need to wait.
+
+I did use some DILUTE Bd solution-- about 10,000zoospores/mL for the plate test, and about 100,000 for tub test
+I didn't bother with the bead one beause there wasn't enough bd.
+
+UGHHHHHHHH
+Fed the tub one. 
+Made 2 plates with stock 3, and added some tryptone
+Made 3 plates with stock 1
+
+
+# 19 Aug2020
+I sampled the tub ones and 1 plate; the plate pos control (no back) was successful with lots of zoosporangia; visible on 20x but distinguishable on 40x.
+
+The tub ones... not so much. Mind you, they were not as dense as the last set of plate ones (plated 17Aug2020, so zoosporangia would still be quite young)
+I'm hoping that the last set of tub ones will work out... I'm going to set up another set in the next few days I think-- try to get as DENSE of a zoospore pop as possible.
+
+However, the flask Bd is looking pretty good for now. Lots of zoospores.
+
+The new plates I made on 15aug2020 also look good. They are not ready yet, no swimming zoospores.
+If the plates are ready by tomorrow, then I am going to flood them and do one last tub test to sample (hopefully) on Sunday night.
+
+-note- I did not do one on sunday night but did it on Monday
+I got good zoospore counts, and poured 1mL into each well of a 12-well plate.
+Then, after media cooled, I put 1mL of 1millionzoospores/mL into each and tested a bunch of different things:
+- Clean membrane into liquid; but transferred out onto dry media after 24h
+- Clean membrane into liquid; but kept in liquid for 3 days
+- Dirty membrane (THICK biofilm) into liquid; but transferred out onto dry media after 24h
+- Clean (but actually ended up contained) membrane on dry, but add 100uL zoospore solution.
+
+- Also, did a plate test with this too. This pretty much failed because it became contaminated.
+
+
+
+
+000 27aug2020
+sampled everything
+BEST result is leaving a membrane in a 12-well plate (with media) in 1mL of 1million zoospores/mL. Next best is if you move this membrane out after 24h and place it on a solid surface. It's actually not too different.
+
+The bacterial membrane ones have WAY less zoospores-- not sure if it's because they wash off or not with the bacteria when we methanol things?
+
+Not so great was adding 100uL directly onto membrane but I think this was actually because it got contaminated so the bacteria was pretty bad and prevented settlement.
+
+There was also one that was in an infection tub and got transferred to a new jar (with glass beads)-- this actually worked really well. Not as good as the 12-well ones, but much better than anything I've tested yet.
+
+Finally, there was one jus tin the infection tub the whole time. This had a TONNE of bacteria, and wasn't good at all. Barely any zoospores.
+
+So I think the key is to not let the bacteria get to thick, otherwise we lose ALL nuance.
+
+The jar ones were about a week old. I hope they were ripe by day 5...
+

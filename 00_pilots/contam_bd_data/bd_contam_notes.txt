@@ -1,0 +1,14 @@
+Melissa email to alex, 19june2020
+I just made 1 flask this time— 0.4mg/mL final concentration of Streptomycin and Penicillin, with confirmed active zoospores in broth. I left it on the counter by the power bar, so hopefully they grow up fast at room temp. If you want to make more, I put the leftover stock antibiotic solution (~150mL) in the fridge on the bottom door shelf. It’s 0.53mg/mL, with the intention that you dilute it 3:1 with culture to get the proper abx concentration.
+
+
+
+started an exp with inhibition-- see exp notes
+13C== bacteria "1"
+25B == bacteria "3"
+20A == bacteria "2"
+
+
+Tried some plates too.
+
+First set of plates on some old sterile plates-- it seemed like there was some inhibition? But then the next day I dotted those 2 bacteria in duplicate (plus a control plate, also in dup) using leftover filter-sterilized plate-wash media and they look exactly the same. So I think it's fine.
