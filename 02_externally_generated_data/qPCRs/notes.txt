@@ -1,0 +1,31 @@
+REDO: R5_J3_Bd, R9_J15_Bd— singlecate only
+
+
+R2_J17_Pre— high variance; one is 15, the other is E8. Rich10
+R9_J15_Bd— lost duplicate due to evaporation
+R5_J3_Bd— lost duplicate due to evaporation
+R2_J6_Bd— 200 vs 600
+R12_J3_Bd— high variance; BUT one value is negative. Could be 0, with low detection limit. Rich 10. Need to check plots.
+ Other:
+R9_J19_Pre (3 reps already; don’t re-do)
+R12_J22_Pre 
+R9_J20_Bd 
+R10_J1_Bd
+R6_J7_Bd
+R4_J17_Bd
+R12_J19_Bd- duplicates on same run v consistent, but other run bigger. Can omit though, if desired.
+-14000 vs 4000
+
+Re-do plan; * means MUST
+*R2_J6_Bd
+*R12_J3_Bd
+*R9_J15_Bd
+R9_J20_Bd
+R10_J1_Bd
+R6_J7_Bd
+R4_J17_Bd
+
+*R2_J17_Pre
+R12_J22_Pre 
+*R5_J3_Pre
+

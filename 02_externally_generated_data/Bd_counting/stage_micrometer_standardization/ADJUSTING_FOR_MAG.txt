@@ -1,0 +1,16 @@
+#### Note: I mesaured a stage micrometer to see how many pixels equaled 0.1mm at each magnification.
+I averaged 5 mesaurements of 0.1mm. (see excel file)
+20x: 518.642
+40x: 1031.232
+
+This means that a photo with pixel dimensions of 2592x1728 (which is standard for all photos) has "real" dimensions of:
+
+20x:
+width == 0.4998
+height == 0.3333
+Total area == 0.1665 mm2
+
+40x:
+width == 0.2514
+height == 0.1676
+Total area == 0.0421 mm2
