@@ -1,0 +1,20 @@
+ASVID,ScientificName_unique,IsolateID,ASVRef,proposed,phylogeneticmatch,Notes
+ASV_033fc14444cc93f82f6464968d72c6b2,g__Pseudomonas_unknown.1,34F,REF_69,34B,34B,
+ASV_1bc599cac5647c5c30496e93ca551557,g__Pseudomonas_unknown.9,35E,REF_49,35E,35E,
+ASV_213f59ff91f42554a6570145dbeff3da,g__Pseudomonas_unknown.11,34F,REF_55,34B,34B,
+ASV_255429c75a0f47d5a30c6ac429fa7c34,g__Pseudomonas_unknown.14,2F,REF_71,34B,34B,CONTAM
+ASV_38c27ceaed634984c1225a82648cf571,g__Pseudomonas_unknown.25,BTB_45,REF_12,BTB_45,BTB_45,
+ASV_43fddf1528d4a98928fd8c3a8ac23bfd,g__Pseudomonas_unknown.31,25A,REF_98,25A,25A,
+ASV_4ea59d33f520370432fb7cb625b56c12,s__Paenibacillus_lautus.1,40A,REF_3,40A,NA,
+ASV_5648dccee530d68ceb3e4d7d22cf8756,g__Pseudomonas_unknown.41,BTB_59,REF_114,BTB_59,BTB_59,CONTAM
+ASV_5746145cd6809625dd78c312e6605cb4,g__Pseudomonas_unknown.42,34F,REF_56,34B,34B,
+ASV_6a42f6b31b1958a4fd7c015ad7affbf4,g__Paenibacillus_unknown.4,50B,REF_21,50B,NA,
+ASV_8b9ede8e4455abbacd8d8d787eb6383d,f__Enterobacteriaceae_unknown.1,35B,REF_34,35B,NA,
+ASV_b65fae1900c461356f7ec33239edf811,g__Pseudomonas_unknown.562,2E,REF_81,50A,50A,CONTAM
+ASV_bdf8a26094624622d68509a87fa75ba7,g__Bacillus_unknown.40,13C,REF_51,13C,NA,
+ASV_ec2d6318d95da4328567972cc10eb066,g__Pseudomonas_unknown.580,34F,REF_57,34B,34B,
+ASV_f13bd5edd93cef613314f42915c99a6f,g__Pseudomonas_unknown.582,2H,REF_25,50A,NA,
+ASV_f8aeec3c1ff0f4e7e1c829e4db0618d9,g__Pseudomonas_unknown.585,34B,REF_14,BTB_45,BTB_45,
+ASV_fa0bfc5b671a0016df8fd1840f314bab,g__Flavobacterium_unknown.57,50A,REF_11,50A,NA,
+ASV_fb67b286b0f781b0de13d50179318995,g__Stenotrophomonas_unknown.47,33D,REF_59,33D,NA,*8 Remove from NON-- this is probably extraction contam
+ASV_14c6f745ca3896169903ea6ea03d48ac,g__Pseudomonas_unknown.6,NA,NA,34B,34B,
