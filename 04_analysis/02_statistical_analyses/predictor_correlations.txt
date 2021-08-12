@@ -1,0 +1,7 @@
+X	Y	Correlation	t	df	pvalue
+CV_log10	qPCR_bact_log10	0.669	7.63	72	7.51e-11
+CV_log10	Richness	0.376	3.45	72	0.000951
+CV_log10	inhibRichFrac_raw	0.289	2.56	72	0.0125
+qPCR_bact_log10	Richness	0.632	6.92	72	1.57e-09
+qPCR_bact_log10	inhibRichFrac_raw	0.109	0.926	72	0.357
+Richness	inhibRichFrac_raw	0.165	1.42	72	0.159

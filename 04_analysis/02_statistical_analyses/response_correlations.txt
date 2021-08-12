@@ -1,0 +1,12 @@
+
+	Pearson's product-moment correlation
+
+data:  dat$Bd_micro_log10 and dat$Bd_qPCR_log10
+t = 7.2875, df = 72, p-value = 3.251e-10
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.4970295 0.7659948
+sample estimates:
+      cor 
+0.6515332 
+

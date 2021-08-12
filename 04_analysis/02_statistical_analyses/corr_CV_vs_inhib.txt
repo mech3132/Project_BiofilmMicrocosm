@@ -1,0 +1,12 @@
+
+	Welch Two Sample t-test
+
+data:  dat$CV_log10 by as.character(dat$Inhibitory)
+t = -5.2716, df = 69.061, p-value = 1.466e-06
+alternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0
+95 percent confidence interval:
+ -0.9445982 -0.4259506
+sample estimates:
+mean in group 0 mean in group 1 
+     -0.2778139       0.4074604 
+

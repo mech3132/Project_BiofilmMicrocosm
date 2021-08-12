@@ -1,0 +1,38 @@
+
+Call:
+lm(formula = CV_log10 ~ inhibProp, data = dat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.0109 -0.4980 -0.1252  0.5136  1.1250 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)  
+(Intercept) -9.482e-17  7.400e-02   0.000   1.0000  
+inhibProp    4.694e-01  1.901e-01   2.469   0.0159 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6366 on 72 degrees of freedom
+Multiple R-squared:  0.07803,	Adjusted R-squared:  0.06523 
+F-statistic: 6.094 on 1 and 72 DF,  p-value: 0.01594
+
+
+Call:
+lm(formula = CV_log10 ~ inhibRichFrac_raw, data = dat)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.9876 -0.4891 -0.1851  0.5604  1.1338 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)  
+(Intercept)       -0.13707    0.09112  -1.504   0.1369  
+inhibRichFrac_raw  0.53954    0.21052   2.563   0.0125 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6346 on 72 degrees of freedom
+Multiple R-squared:  0.0836,	Adjusted R-squared:  0.07088 
+F-statistic: 6.569 on 1 and 72 DF,  p-value: 0.01247
+

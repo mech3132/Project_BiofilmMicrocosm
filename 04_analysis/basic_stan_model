@@ -1,0 +1,30 @@
+// Testing out hierarchical model
+  data {
+  int <lower=0> N; // Number of observations
+  int <lower=0> K; // Number of predictors
+  int <lower=0> G; // Number of groups
+  vector[N] y; //
+  matrix[N,K] x; // data matrix
+  int <lower = 1, upper = G> gg[N]; // Vector of group assignments
+  }
+  parameters {
+  int a; //intercept
+  vector[K] b; //coefficients
+  real tau; //variation between groups
+  vector[G] ag; //different intercepts for each group
+  real <lower=0> sigma; /variation at sampling level
+  }
+  model{
+  //Hyper priors
+  tau ~ normal(0,5)
+  
+  //Priors
+  a ~ normal(0,5)
+  
+  //Model
+  y[n] ~ normal( ag[gg[n]] + x*b, sigma)
+  for (g in 1:G) {
+    ag[g] ~ normal(a, tau)
+  }
+  generated quantities {}
+  }

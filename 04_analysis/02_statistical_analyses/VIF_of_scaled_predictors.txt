@@ -1,0 +1,92 @@
+############ Variance Inflation Factor of scaled predictors
+                          Predictor Bd_qpcr_model Bd_micro_model Bd_qpcrbymicro_model
+1                 inhibRichFrac_raw      1.339477       1.339533             1.503851
+2                          Richness      2.400965       2.401338             2.466411
+3                          CV_log10      3.034534       3.035603             3.485697
+4                   qPCR_bact_log10      3.675644       3.675101             3.895946
+5        inhibRichFrac_raw:Richness      2.362155       2.362070             2.362539
+6        inhibRichFrac_raw:CV_log10      4.052681       4.050256             4.091947
+7 inhibRichFrac_raw:qPCR_bact_log10      3.913914       3.910378             3.981731
+8                    Bd_micro_log10            NA             NA             2.524536
+
+
+############ qPCR model
+Linear mixed model fit by REML ['lmerMod']
+Formula: Bd_qPCR_log10 ~ inhibRichFrac_raw + inhibRichFrac_raw:Richness +  
+    Richness + CV_log10 + qPCR_bact_log10 + CV_log10:inhibRichFrac_raw +  
+    qPCR_bact_log10:inhibRichFrac_raw + (1 | DateStart)
+   Data: dat
+
+REML criterion at convergence: 167.8
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.99069 -0.77568  0.08653  0.63129  1.86039 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ DateStart (Intercept) 0.1115   0.3340  
+ Residual              0.4663   0.6829  
+Number of obs: 74, groups:  DateStart, 6
+
+Fixed effects:
+                                  Estimate Std. Error t value
+(Intercept)                        2.84738    0.17202  16.552
+inhibRichFrac_raw                 -0.69131    0.26458  -2.613
+Richness                           0.05468    0.06854   0.798
+CV_log10                          -0.58157    0.22164  -2.624
+qPCR_bact_log10                   -0.24444    0.10772  -2.269
+inhibRichFrac_raw:Richness        -0.60665    0.21232  -2.857
+inhibRichFrac_raw:CV_log10         0.57149    0.67524   0.846
+inhibRichFrac_raw:qPCR_bact_log10  0.54058    0.31812   1.699
+
+Correlation of Fixed Effects:
+            (Intr) inhRF_ Rchnss CV_l10 qPCR__ iRF_:R iRF_:C
+inhbRchFrc_ -0.344                                          
+Richness     0.098 -0.105                                   
+CV_log10     0.161 -0.103  0.190                            
+qPCR_bct_10 -0.084  0.008 -0.606 -0.638                     
+inhbRchF_:R -0.088  0.067 -0.513 -0.121  0.311              
+inRF_:CV_10 -0.046 -0.335 -0.062 -0.517  0.333 -0.101       
+iRF_:PCR__1  0.003  0.307  0.275  0.342 -0.487 -0.393 -0.672
+
+
+############ Micro model
+Linear mixed model fit by REML ['lmerMod']
+Formula: Bd_micro_log10 ~ inhibRichFrac_raw + inhibRichFrac_raw:Richness +  
+    Richness + CV_log10 + qPCR_bact_log10 + CV_log10:inhibRichFrac_raw +  
+    qPCR_bact_log10:inhibRichFrac_raw + (1 | DateStart)
+   Data: dat
+
+REML criterion at convergence: 172.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.5482 -0.6129 -0.1076  0.4870  1.9363 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ DateStart (Intercept) 0.1285   0.3585  
+ Residual              0.4959   0.7042  
+Number of obs: 74, groups:  DateStart, 6
+
+Fixed effects:
+                                  Estimate Std. Error t value
+(Intercept)                        1.18064    0.18201   6.487
+inhibRichFrac_raw                 -0.78254    0.27289  -2.868
+Richness                          -0.09767    0.07070  -1.381
+CV_log10                          -0.72005    0.22882  -3.147
+qPCR_bact_log10                   -0.22044    0.11112  -1.984
+inhibRichFrac_raw:Richness        -0.00672    0.21908  -0.031
+inhibRichFrac_raw:CV_log10         0.51175    0.69649   0.735
+inhibRichFrac_raw:qPCR_bact_log10  0.32852    0.32812   1.001
+
+Correlation of Fixed Effects:
+            (Intr) inhRF_ Rchnss CV_l10 qPCR__ iRF_:R iRF_:C
+inhbRchFrc_ -0.336                                          
+Richness     0.095 -0.105                                   
+CV_log10     0.157 -0.104  0.189                            
+qPCR_bct_10 -0.082  0.008 -0.605 -0.638                     
+inhbRchF_:R -0.086  0.067 -0.513 -0.121  0.311              
+inRF_:CV_10 -0.045 -0.335 -0.061 -0.517  0.332 -0.101       
+iRF_:PCR__1  0.003  0.306  0.275  0.341 -0.487 -0.393 -0.672
