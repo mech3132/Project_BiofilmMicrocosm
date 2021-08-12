@@ -1,0 +1,36 @@
+- jars 1,2,7,9 didn't have water in centre-- maybe something wrong with membranes?
+
+31july2020
+- started at 11:15; finished 96-well plate around 12:30. Then, took until 2pm to mix cultures.
+
+Put 1mL culture ein in 1.5mL centrifuge tube; spun down 2 min at 8000g and sucked off liquid. froze at -20 for DNA extractions later.
+
+Put 1mL of mixed culture in each tube. In future, I should calculate "duplicate" jars together, so that I don't have to mix 2x the tubes. 4mL total of mixture, at a total of 0.1OD per tube (each isolate an equal fraction of total).
+
+Fed 500uL and put in shaker at 88rpm, room temp.
+
+Bd finally growing up nice in plates. have too many plates now, haha.
+
+
+I fixed the code so you sum both reps of the jars together to mix, but I kept the OG version (_used.txt) for reference purposes
+
+
+00 3 aug 2020
+CV sampled
+I forgot my laptop at home, so I re-randomized which jars got bd and which were sampled for CV.
+
+- jars 2, 11, 9, 3, 7, 13, 5 --> exposed to Bd
+- jars 1,4,6,8,10,12,14 --> sampled for biofilm
+
+15 min methanol
+5 min diH2O
+15 min CV
+rinse 2x diH2O
+dry
+
+Dropped 1mL of 5e6 zoospores directly on each membrane; both sides.
+
+--- 4 aug 2020
+sampled pilot plate Bd; the methanol + rinsing doesn't remove a significant amount of Bd (or at least, I can still see them easily) but the pilot jars STILL don't have Bd. So I believe it's a density issue, and not a staining issue. Will need to figure out how to make denser Bd inoculant...
+
+
