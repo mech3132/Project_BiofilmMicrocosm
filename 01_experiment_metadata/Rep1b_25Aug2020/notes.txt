@@ -1,0 +1,38 @@
+#
+1sept2020
+- bd flood-- start with this.
+- Get all the jars
+- test centres of all of them (7 per plate)
+- dilute bd out to 1mil/mL
+- make bd inhib plate first; 4 swabs per plate
+- put all membranes in each well of 12-well
+- put washer in
+- put 1mL Bd solution in each; swirl gently
+
+- sample all DNA membranes first.
+- from CV ones, scrape a little and dot onto Bd plates
+- peel off CV and preserve in methanol, 15 min
+(autoclave jars in meantime)
+- rinse off in 1mL diwater, 5min
+- CV stain, 0.1%, 10 min
+- rinse of in 1mL diwater, 5 min
+- rinse off once more
+- dry
+
+Bd concentration:
+20.15 million/mL
+
+Diluted 20mL water to 1mL Bd solution to get 1mill/mL
+
+
+
+FUCK. I messed it up. I didn't run set.seed and divided the samples up wrong. I ended up:
+- CV: 1,7,8,10,12,13
+- DNA: 1,7,8,12,13, 11??
+
+- Bd: 2,2,3,3,4,4,5,5,6,6,9,9,14*14,11,10--> took from DNA jars
+* 14 removed metal discs
+
+
+
+
