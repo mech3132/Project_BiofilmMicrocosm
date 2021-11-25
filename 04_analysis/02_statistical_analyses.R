@@ -965,6 +965,61 @@ challenge_iso_summary %>%
 save(challenge_iso_summary, file="02_statistical_analyses/challenge_iso_summary.RData")
 write.table(challenge_iso_summary, file="02_statistical_analyses/challenge_iso_summary.txt", quote=FALSE, row.names = FALSE, sep="\t")
 
+#### Are biofilm-formers also inhibitory? ####
+
+### Is there are relationship between biofilm-forming ability and bd zone of inhibition
+gg_cvinhib <- challenge_iso_summary %>% ungroup() %>%
+  ggplot(aes(x=log(aveCV+0.01), y=aveInhibZonemm)) + geom_point() +
+  ylab("Average zone of Bd inhibition (mm)") + xlab("Biofilm thickness (log CV intensity +0.01)") +
+  geom_smooth(method="lm")
+gg_cvinhib
+
+gg_compinhib <- challenge_iso_summary %>% ungroup() %>%
+  ggplot() + geom_point(aes(x=aveInhibZonemm, y=fractionBeat)) +
+  xlab("Average zone of Bd inhibition (mm)") + ylab("Fraction of pair-wise comparisons\nwhere isolate is dominant")
+gg_compinhib
+
+### Is there a relationship between bd zone of inhibition and how likely it is to survive?
+challenge_iso_summary_withRA <- t(apply(dat_iso, 1, function(x) x/sum(x))) %>% as.data.frame() %>%
+  drop_na() %>% rownames_to_column(var="sample") %>%
+  pivot_longer(-sample, names_to="Isolate_testing", values_to="RA") %>%
+  filter(RA>0) %>% filter(RA!=1) %>% left_join(challenge_iso_summary)
+
+gg_abundcv <- challenge_iso_summary_withRA %>% ungroup() %>%
+  group_by(Isolate_testing, IsolateID, aveCV, aveInhibZonemm) %>%
+  mutate(meanRA = mean(RA), sdRA = sd(RA)) %>%
+  ggplot(aes(x=log(aveCV+0.01), y=meanRA, col=aveInhibZonemm)) + 
+  geom_point() +
+  geom_errorbar(aes(x=log(aveCV+0.01), ymin=meanRA-sdRA, ymax=meanRA+sdRA)) +
+  xlab("Biofilm thickness (log CV intensity +0.01)") + 
+  ylab("Relative Abundance\nof isolate in biofilm") +
+  labs(col="Average zone of \nBd inhibition (mm)")
+gg_abundcv
+
+
+gg_abundinhib <- challenge_iso_summary_withRA %>% ungroup() %>%
+  group_by(Isolate_testing, IsolateID, aveCV, aveInhibZonemm) %>%
+  mutate(meanRA = mean(RA), sdRA = sd(RA)) %>%
+  ggplot(aes(x=aveInhibZonemm, y=meanRA)) + 
+  geom_point() +
+  geom_errorbar(aes(x=aveInhibZonemm, ymin=meanRA-sdRA, ymax=meanRA+sdRA)) +
+  xlab("Average zone of \nBd inhibition (mm)") + 
+  ylab("Relative Abundance\nof isolate in biofilm") 
+gg_abundinhib
+
+
+challenge_iso_summary %>% ungroup() %>%
+  mutate(Inhibitory01= as.numeric(Inhibitory)) %>%
+  ggplot(aes(x=aveCV, y=Inhibitory01)) + geom_point() #+
+  # geom_smooth(method="glm")
+challenge_iso_summary %>% ungroup() %>%
+  ggplot(aes(x=aveCV, y=fractionBeat)) + geom_point() +
+  geom_smooth(method="glm")
+
+challenge_iso_summary %>% ungroup() %>%
+  ggplot(aes(x=aveInhibZonemm, y=fractionBeat, col=aveCV)) + geom_point() +
+  geom_smooth(method="glm")
+
 #### Saturating effects of CV, qPCR
 isolate_info
 # get isolate PA table
