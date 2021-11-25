@@ -1,0 +1,5 @@
+DroppedASVs
+40B-27F_C12.ab1
+33B-27F_G11.ab1
+25A-27F_F12.ab1
+32E-27F_E09.ab1
