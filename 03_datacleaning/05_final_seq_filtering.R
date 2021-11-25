@@ -13,9 +13,13 @@ asv_and_meta <- read.delim("02_merge_all_data/metadata_allReps.txt")
 # asv_meta <- read.delim("01_seq_data_cleaning/downstream/asv_metadata.txt")
 filtSeq_meta <- read.delim("03_manual_seq_compare/downstream/subsetASVs_for_tree_df.txt")
 treeFilt <- read.tree("04_tree_mapping_for_filtered_seqs/raxml_tree_filteredseqs.tre/tree.nwk")
+treeSEPP <- read.tree("01_seq_data_cleaning/downstream/tree_mineandalex.tre")
+removedASVs <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/dropped_ASVs.txt")
 allASV_inhibData <- read.delim("../00_isolate_info/all_isolate_info_combined.txt", sep = ",")
 allASV_taxonomy <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/taxonomy.txt")
 otu_raw <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/otu_table.txt", row.names = 1)
+tokeepAlex <- read.delim("01_seq_data_cleaning/downstream/tips_in_tree_mine_and_alex.txt")
+tokeepAlex <- tokeepAlex %>% rowwise() %>% mutate(labelNames2 = ifelse(colorTips%in%c("red","blue"), paste0(iso, " (",ScientificName_unique,")"), ScientificName_unique))
 #### Filter to include only relavent
 treeTips <- treeFilt$tip.label
 
@@ -28,16 +32,21 @@ otu_all <- otu_raw %>% t() %>% as.data.frame() %>%
 taxa_filt <- allASV_taxonomy %>% filter(ASVID %in% treeTips) %>% full_join(data.frame(ASVID=treeTips)) %>%
   rowwise() %>% mutate(dataset=ifelse(length(grep(".ab1", ASVID, fixed=TRUE))>0, "alex","mine")) %>% ungroup() %>%
   rowwise() %>% mutate(IsolateID = ifelse(dataset=="alex", strsplit(ASVID, split="-")[[1]], NA)) %>%
-  ungroup()
+  ungroup() #%>% filter( (dataset=="alex" & IsolateID%in%tokeepAlex$ASVID) | dataset!="alex" )
+# taxa_filt$IsolateID
 allIsolates <- unique(taxa_filt$IsolateID[!is.na(taxa_filt$IsolateID)])
+allIsolates <- allIsolates[allIsolates %in% tokeepAlex$iso]
+
 inhibData_filt <- allASV_inhibData %>% select(IsolateID, Inhibitory) %>% filter(IsolateID %in% allIsolates) %>%
-  mutate(Inhibitory01 = ifelse(Inhibitory,1,0))
+  mutate(Inhibitory01 = ifelse(Inhibitory,1,0)) %>% distinct()
+
 
 ### Make metadata of filered sequences
 ASV_meta_full <- taxa_filt %>% full_join(inhibData_filt) %>% filter(ASVID %in% treeTips) %>%
+  filter(ASVID %in% tokeepAlex$ASVID) %>%
   mutate(dataset = ifelse(is.na(dataset), "alex", dataset)) %>% rowwise() %>%
   mutate(IsolateID = ifelse(dataset=="alex", strsplit(ASVID, split="-")[[1]], NA)) %>% ungroup() %>% 
-  mutate(treeTipLabel = ifelse(dataset=="alex", IsolateID, ScientificName_unique)) %>% 
+  mutate(treeTipLabel = ifelse(dataset=="alex", paste0(IsolateID,"(",ScientificName_unique,")"), ScientificName_unique)) %>% 
   select(ASVID, IsolateID, Taxon, Domain, Phylum, Class, Order, Family, Genus, Species, ScientificName_unique, dataset, Inhibitory01, treeTipLabel) %>%
   mutate(treePlotColor = ifelse(dataset=="mine", "black", ifelse(Inhibitory01==1, "red", "blue")))
 # ASV_meta_full %>% View()
@@ -45,12 +54,35 @@ ASV_meta_full <- taxa_filt %>% full_join(inhibData_filt) %>% filter(ASVID %in% t
 ########### Try mapping ONLY important ASVs and then cross-checking ######
 importantASVs <- gsub("ASV_","",asv_and_meta %>% select(starts_with("ASV")) %>% colnames())
 alexASVs <- treeFilt$tip.label[grep(".ab1",treeFilt$tip.label, fixed=TRUE)]
+alexASVs <- alexASVs[alexASVs %in% tokeepAlex$ASVID]
+# data.frame(ASVID=alexASVs) %>% separate(ASVID, into=c("Iso","Other"), sep="-27F_", remove=FALSE) %>%
+#   mutate(duplicate=duplicated(Iso)) %>% rowwise() %>% mutate(repeated=ifelse(length(grep("^R_", Other))>0, TRUE, FALSE)) %>%
+#   filter(!duplicate | (duplicate&repeated)) %>% 
+#   arrange(Iso) %>% View()
 nonImportantTips <- treeFilt$tip.label[!(treeFilt$tip.label %in% c(importantASVs,alexASVs))]
 treeFilt_FILT_tipsChanged <- drop.tip(treeFilt, tip = nonImportantTips)
+treeFilt_FILT_tipsChanged2 <- drop.tip(treeFilt, tip = nonImportantTips)
+# SEPP tree
+ImportantTips <- tokeepAlex%>% filter(!(ASVID %in% nonImportantTips)) %>% pull(labelNames)
+treeSEPP_FILT_tipsChanged <- keep.tip(treeSEPP, tip = ImportantTips)
+seppTipCol <- pull(tokeepAlex[match(treeSEPP_FILT_tipsChanged$tip.label, tokeepAlex$labelNames),"colorTips"])
+
+# treeFilt_FILT_tipsChanged$tip.label <- pull(ASV_meta_full[match(treeFilt_FILT_tipsChanged$tip.label, ASV_meta_full$ASVID),"treeTipLabel"])
+pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_ONLYIMPORTANT_SEPP.pdf", height=15, width=10)
+plot(treeSEPP_FILT_tipsChanged, tip.color = seppTipCol)
+dev.off()
 
 treeFilt_FILT_tipsChanged$tip.label <- pull(ASV_meta_full[match(treeFilt_FILT_tipsChanged$tip.label, ASV_meta_full$ASVID),"treeTipLabel"])
 pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_ONLYIMPORTANT.pdf", height=15, width=10)
 plot(treeFilt_FILT_tipsChanged, tip.color = pull(ASV_meta_full[match(treeFilt_FILT_tipsChanged$tip.label, ASV_meta_full$treeTipLabel),"treePlotColor"]))
+dev.off()
+
+oldTipNames <- treeFilt_FILT_tipsChanged2$tip.label
+newTipNames <- tokeepAlex[match(oldTipNames, tokeepAlex$ASVID),]
+
+treeFilt_FILT_tipsChanged2$tip.label <- newTipNames$labelNames
+pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_ONLYIMPORTANT_relabelled.pdf", height=15, width=15)
+plot(treeFilt_FILT_tipsChanged2, tip.color = newTipNames$colorTips)
 dev.off()
 
 # And also print the supposed matching
@@ -65,19 +97,66 @@ write.table(toWrite_filt, file="05_final_seq_filtering/table_to_crosscheck_with_
 #### Upload after manual edits #####
 treeMatches <- read.delim("05_final_seq_filtering/table_to_crosscheck_with_tree_IMPORTANTONLY_ANNOTATED.csv")
 final_assignments <- treeMatches %>% filter(perfectmatch)
+#Tips to drop
 unassignedASVs <- importantASVs[!(paste0("ASV_",importantASVs) %in% final_assignments$ASVID)]
 unassignedIsolates <- allIsolates[!(allIsolates %in% final_assignments$IsolateID)]
 unassignedAlex <-ASV_meta_full %>% filter(IsolateID %in% unassignedIsolates) %>% pull(ASVID)
 tipsToDrop <- treeFilt$tip.label[!(treeFilt$tip.label %in% c(unassignedASVs, unassignedAlex))]
+# Tips to keep
+assignedASVs <- importantASVs[(paste0("ASV_",importantASVs) %in% final_assignments$ASVID)]
+assignedIsolates <- allIsolates[(allIsolates %in% final_assignments$IsolateID)]
+assignedAlex <-ASV_meta_full %>% filter(IsolateID %in% assignedIsolates) %>% pull(ASVID)
+tipsToKeep <- treeFilt$tip.label[(treeFilt$tip.label %in% c(assignedASVs, assignedAlex))]
+
+# Match final assignments to names
+perfectLabels <- final_assignments %>% rowwise() %>% 
+  mutate(labelPerfectMatch=paste0(ScientificName_unique, " (assigned to ",IsolateID,")")) %>% ungroup() %>%
+  select(ScientificName_unique, labelPerfectMatch)
+tokeepAlex <- full_join(tokeepAlex, perfectLabels) %>%
+  mutate(labelNames3 = ifelse(!is.na(labelPerfectMatch), labelPerfectMatch, labelNames2))
+
+# tipsToKeep <- treeFilt$tip.label[which(treeFilt$tip.label %in% c(unassignedASVs, unassignedAlex))]
 
 ##### Look at tree
 treeFilt_tipsChanged_unassigned <- drop.tip(treeFilt, tip = tipsToDrop)
 # NOTE: the one that I can't find is that extra in Bd set that "appeared" later on!
 
-treeFilt_tipsChanged_unassigned$tip.label <- pull(ASV_meta_full[match(treeFilt_tipsChanged_unassigned$tip.label, ASV_meta_full$ASVID),"treeTipLabel"])
+# treeFilt_tipsChanged_unassigned$tip.label <- pull(ASV_meta_full[match(treeFilt_tipsChanged_unassigned$tip.label, ASV_meta_full$ASVID),"treeTipLabel"])
+treeFilt_tipsChanged_unassigned$tip.label <- pull(tokeepAlex[match(treeFilt_tipsChanged_unassigned$tip.label, tokeepAlex$ASVID),"labelNames3"])
+tempTipCol <- pull(tokeepAlex[match(pull(treeFilt_tipsChanged_unassigned$tip.label), tokeepAlex$labelNames3),"colorTips"])
 pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_LEFTOVERS.pdf", height=10, width=15)
-plot(treeFilt_tipsChanged_unassigned, tip.color = pull(ASV_meta_full[match(treeFilt_tipsChanged_unassigned$tip.label, ASV_meta_full$treeTipLabel),"treePlotColor"]))
+plot(treeFilt_tipsChanged_unassigned, tip.color = tempTipCol)
 dev.off()
+# 
+# KEEP TIPS
+treeFilt_tips_perft <- keep.tip(treeFilt, tipsToKeep)
+treeFilt_tips_perft$tip.label <- pull(tokeepAlex[match(treeFilt_tips_perft$tip.label, tokeepAlex$ASVID),"labelNames3"])
+tempTipCol <- pull(tokeepAlex[match(treeFilt_tips_perft$tip.label, tokeepAlex$labelNames3),"colorTips"])
+pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_PERFECT.pdf", height=10, width=15)
+plot(treeFilt_tips_perft, tip.color=tempTipCol)
+dev.off()
+
+### FOr SEPP
+tipsToDropSEPP <- tokeepAlex %>% filter(ASVID %in% tipsToDrop) %>% pull(labelNames)
+treeSEPP_tipsChanged_unassigned <- drop.tip(treeSEPP, tip = tipsToDropSEPP)
+# Get color
+treeSEPP_tipsChanged_unassigned$tip.label <- pull(tokeepAlex[match(treeSEPP_tipsChanged_unassigned$tip.label, tokeepAlex$labelNames),"labelNames3"])
+tempTipCol <- pull(tokeepAlex[match(treeSEPP_tipsChanged_unassigned$tip.label, tokeepAlex$labelNames3),"colorTips"])
+pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_LEFTOVERS_SEPP.pdf", height=10, width=15)
+plot(treeSEPP_tipsChanged_unassigned, tip.color = tempTipCol)
+dev.off()
+# 
+# KEEP TIPS
+tipsToKeepSEPP <- tokeepAlex %>% filter(ASVID %in% tipsToKeep) %>% pull(labelNames)
+treeSEPP_tips_perft <- keep.tip(treeSEPP, tip = tipsToKeepSEPP)
+
+treeSEPP_tips_perft$tip.label <- pull(tokeepAlex[match(treeSEPP_tips_perft$tip.label, tokeepAlex$labelNames),"labelNames3"])
+tempTipCol <- pull(tokeepAlex[match(treeSEPP_tips_perft$tip.label, tokeepAlex$labelNames3),"colorTips"])
+pdf("05_final_seq_filtering/raxml_tree_of_filtered_seqs_PERFECT_SEPP.pdf", height=6, width=10)
+plot(treeSEPP_tips_perft, tip.color=tempTipCol)
+dev.off()
+
+
 
 # And also print the supposed matching
 newList_nonassignedASVs <- ASV_meta_full %>% filter(dataset=="mine") %>% select(ASVID, ScientificName_unique) %>%
@@ -193,7 +272,7 @@ for ( asv in importantASVs) {
     mutate(Reads = Reads/sum(Reads)) %>%
     mutate(Reads = ifelse(Reads==0, NA, Reads)) %>%
     ggplot() + geom_point(aes(x=factor(RichLevel), y=Rep, fill=Reads, pch=Present), cex=4) +
-    facet_grid(Inhibitory~Type) +xlab("RichLevel") + labs(title=paste0(tempName, ": ", asv))+
+    facet_grid(Inhibitory~Type) +xlab("RichLevel") + labs(title=paste0(tempName))+
     scale_fill_gradient(low="black", high="red", na.value = "lightgrey")+
     scale_shape_manual(values=c(21, 24))
   ggsave(filename = paste0("05_final_seq_filtering/final_matchups/",tempIso,"_",asv,".png"), 
@@ -206,15 +285,19 @@ for ( asv in importantASVs) {
 # How many had perfect, single, matches?
 PerfectSingleMatches_withphylogeny <- final_assignments_all %>% group_by(IsolateID) %>% mutate(number=n()) %>% ungroup() %>%
   filter(number==1, perfectmatch==TRUE, phylogeneticmatch==TRUE)
+PerfectSingleMatches_withphylogeny
 PerfectSingleMatches_nophylogeny <- final_assignments_all %>% group_by(IsolateID) %>% mutate(number=n()) %>% ungroup() %>%
   filter(number==1, perfectmatch==TRUE) %>%
   filter(!(IsolateID %in% PerfectSingleMatches_withphylogeny$IsolateID))
+PerfectSingleMatches_nophylogeny
 SingleMatches_withphylogeny <- final_assignments_all %>% group_by(IsolateID) %>% mutate(number=n()) %>% ungroup() %>%
   filter(number==1, phylogeneticmatch==TRUE) %>%
   filter(!(IsolateID %in% c(PerfectSingleMatches_withphylogeny$IsolateID, PerfectSingleMatches_nophylogeny$IsolateID)))
+SingleMatches_withphylogeny
 MultipleMatches_withphylogeny <- final_assignments_all %>% group_by(IsolateID) %>% mutate(number=n()) %>% ungroup() %>%
   filter(phylogeneticmatch==TRUE) %>%
   filter(!(IsolateID %in% c(PerfectSingleMatches_withphylogeny$IsolateID, PerfectSingleMatches_nophylogeny$IsolateID, SingleMatches_withphylogeny$IsolateID)))
+MultipleMatches_withphylogeny
 Remaining <- final_assignments_all %>%
   filter(!(IsolateID %in% c(PerfectSingleMatches_withphylogeny$IsolateID, PerfectSingleMatches_nophylogeny$IsolateID, SingleMatches_withphylogeny$IsolateID, MultipleMatches_withphylogeny$IsolateID)))
 
@@ -286,6 +369,7 @@ allData_merged_filt <- meta_only %>% full_join(ASV_merged_filt)
 
 write.table(allData_merged, file="05_final_seq_filtering/downstream/asv_and_meta_merged.txt", sep="\t", quote=FALSE, row.names = FALSE)
 write.table(allData_merged_filt, file="05_final_seq_filtering/downstream/asv_and_meta_merged_and_filt.txt", sep="\t", quote=FALSE, row.names = FALSE)
+write.table(final_assignments_all, file="05_final_seq_filtering/downstream/final_matches.txt", sep="\t", row.names = FALSE, quote = FALSE)
 
 ## Merge CV and Bd and collapse
 

@@ -137,7 +137,7 @@ toRemoveSamples <-c("R1_J27_Pre", "R1_J22_Pre" # Rich 10 Inhib. ASVs look very d
                     ,"R3_J4_Pre", "R3_J12_Bd" # Rich 10, Inhib, contaminated
                     , "R4_J17_Bd" # Rich 10, Inhib, contaminated. Can't tell low from high
                     # , "R6_J7_Bd" # Keep; looks okay
-                    , "R6_J24_Bd"
+                    # , "R6_J24_Bd"
                     , "R7_J15_Bd" # Paenibacillus contam
                     # , "R7_J21_Pre" # can't tell what's real and not
                     , "R8_J7_Pre" # Rich 3, Non, just looks weird. Could also get rid of entier R8 non

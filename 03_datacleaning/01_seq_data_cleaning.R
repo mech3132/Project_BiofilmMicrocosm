@@ -12,7 +12,9 @@ dir.create("01_seq_data_cleaning")
 otu <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/otu_table.txt", row.names = 1)
 inhibMeta <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/allInhibData.txt")
 tree <- read.tree("../02_externally_generated_data/16S_sequencing/downstream/filtered_tree.tre")
+tree2 <- read.tree("../02_externally_generated_data/16S_sequencing/downstream/filtered_tree_nonExtract.tre")
 taxa <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/taxonomy.txt")
+# taxa_alex <- read.delim("../02_externally_generated_data/16S_sequencing/downstream/taxonomy_alexblast.txt")
 qPCR <- read.delim("../02_externally_generated_data/qPCRs/downstream/qPCR_results_combined_edited.txt")
 # alexIsolates <- read.delim("../02_externally_generated_data/16S_sequencing/intermediate_files/allIsolates.txt", header = FALSE)
 alex_isos <- read.delim("../02_externally_generated_data/16S_sequencing/intermediate_files/imported_databases/alexKeepSamesunique.txt")
@@ -623,6 +625,12 @@ while (length(remainingTips)>0) {
 ### Maybe check Alex's isolates to see if they match up to anything
 
 alexTips <- alex_isos$ASVID[alex_isos$ASVID %in% tree$tip.label]
+# Which ones are not in the tree?
+# alex_isos$ASVID[which(!alex_isos$ASVID %in% alexTips)]
+# tree$tip.label
+# tree$tip.label[grep("13C",tree$tip.label)]
+# tree$tip.label[grep("[.]ab1",tree$tip.label)]
+# c("40B","33B","32H","32F","32E","25A")
 
 tree.filt_walex <- keep.tip(tree, c(filtOTUs, alexTips))
 # Turn into color
@@ -634,12 +642,22 @@ colorTips[ match(alexIsos_inhib, tree.filt_walex$tip.label) ] <- "red"
 colorTips[ match(alexIsos_non, tree.filt_walex$tip.label) ] <- "blue"
 
 # colorTips[grep(".ab1", tree.filt_walex$tip.label)] <- "red"
+# taxa_combined <- taxa %>% left_join(taxa_alex)
+allTaxa <- taxa %>% filter(ASVID %in% c(alexTips,filtOTUs) ) %>% separate(ASVID, into=c("iso"), sep="-", remove=FALSE,extra = "drop") %>%
+  select(ASVID, iso, ScientificName_unique)
+allTaxa <- allTaxa[match(tree.filt_walex$tip.label, allTaxa$ASVID),]
+
+
 taxaNames <- taxa[match(tree.filt_walex$tip.label, taxa$ASVID), "ScientificName_unique"]
 combined_names <- paste(taxa[match(tree.filt_walex$tip.label, taxa$ASVID),"ScientificName_unique"]
                          , taxa[match(tree.filt_walex$tip.label, taxa$ASVID),"ASVID"], sep ="--")
 taxaNames[grep(".ab1", tree.filt_walex$tip.label)] <- combined_names[grep(".ab1", tree.filt_walex$tip.label)]
 
+
+toExport_tree <- cbind(ASVID1 = tree.filt_walex$tip.label, colorTips, allTaxa, labelNames = taxaNames)
+
 tree.filt_walex$tip.label <- taxaNames
+
 
 png(file = "01_seq_data_cleaning/tree_filtered_ASVS_withAlexIsolates.png",height=1000, width=800)
 plot(tree.filt_walex, tip.color = colorTips)
@@ -1028,6 +1046,10 @@ write.table(ASV_metadata, file = "01_seq_data_cleaning/downstream/asv_metadata.t
 pre_otu_real <- otu_real_abund_round %>% as.data.frame() %>%
   rownames_to_column(var="sampleID_qPCR")
 write.table(pre_otu_real, file = "01_seq_data_cleaning/downstream/pre_otu_real_abundance.txt", quote=FALSE, row.names=FALSE, sep="\t")
+
+# Save tree etc for future downstream
+write.table(toExport_tree, file="01_seq_data_cleaning/downstream/tips_in_tree_mine_and_alex.txt", row.names = FALSE, quote = FALSE, sep="\t")
+write.tree(tree.filt_walex, file="01_seq_data_cleaning/downstream/tree_mineandalex.tre")
 
 
 setwd("..")
