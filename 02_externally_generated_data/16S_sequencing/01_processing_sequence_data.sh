@@ -204,6 +204,11 @@ qiime feature-table merge-seqs \
 --i-data ./intermediate_files/imported_databases/alex_extractedreads515806.qza ./intermediate_files/dada2/rep-seqs.qza ./intermediate_files/imported_databases/woodhams_16S_extractedreads515806.qza \
 --o-merged-data ./intermediate_files/merged_repset/biofilm_alex_woodhams_repset_merged.qza
 
+# UN-cut version?
+qiime feature-table merge-seqs \
+--i-data ./intermediate_files/imported_databases/alexFilteredSeqs.qza ./intermediate_files/dada2/rep-seqs.qza ./intermediate_files/imported_databases/woodhams_16S_extractedreads515806.qza \
+--o-merged-data ./intermediate_files/merged_repset/biofilm_alex_woodhams_repset_merged_nonExtract.qza
+
 ##### Assigning taxonomy ######
 
 mkdir intermediate_files/bayes_classifier
@@ -258,6 +263,20 @@ qiime tools export \
 ## Quickly checking to see how many sequences were lost after filter chloro, mito, archaea
 qiime feature-table summarize --i-table ./intermediate_files/filtering_table/00_table_withoutchloromito.qza \
 --o-visualization ./intermediate_files/filtering_table/00_table_withoutchloromito.qzv
+
+
+#### Blast alex's sequences
+mkdir ./intermediate_files/vsearch_0.8_taxonomy
+qiime feature-classifier classify-consensus-vsearch  \
+--i-query ./intermediate_files/merged_repset/biofilm_alex_woodhams_repset_merged_nonExtract.qza \
+--i-reference-reads intermediate_files/imported_databases/SILVA_99_repset.qza \
+--i-reference-taxonomy intermediate_files/imported_databases/99_SILVA_ref-taxonomy.qza \
+--p-perc-identity 0.8 \
+--o-classification ./intermediate_files/vsearch_0.8_taxonomy/taxonomy
+
+qiime tools export \
+--input-path ./intermediate_files/vsearch_0.8_taxonomy/taxonomy.qza \
+--output-path ./intermediate_files/vsearch_0.8_taxonomy/taxonomy
 
 ## Redone after finding out demultipexing wasn't work:
 # Original filter table had 5,939,614 reads
@@ -319,6 +338,12 @@ qiime fragment-insertion sepp \
 --o-tree ./intermediate_files/phylogeny/SEPP_inserted_tree_rooted_SILVA.qza \
 --o-placements ./intermediate_files/phylogeny/SEPP_placements_SILVA.qza
 
+qiime fragment-insertion sepp \
+--i-representative-sequences ./intermediate_files/merged_repset/biofilm_alex_woodhams_repset_merged_nonExtract.qza \
+--i-reference-database ./intermediate_files/imported_databases/99_otus_aligned_masked1977_SILVASEPP.qza \
+--o-tree ./intermediate_files/phylogeny/SEPP_inserted_tree_rooted_SILVA_nonExtract.qza \
+--o-placements ./intermediate_files/phylogeny/SEPP_placements_SILVA_nonExtract.qza
+
 # Remove features that didn't fit into the tree from my database
 ## gg
 #qiime fragment-insertion filter-features \
@@ -357,6 +382,14 @@ qiime tools export \
 qiime tools export \
 --input-path ./intermediate_files/phylogeny/SEPP_placements_SILVA.qza \
 --output-path ./intermediate_files/phylogeny/SEPP_placements_SILVA
+
+# Export tree and placements
+qiime tools export \
+--input-path ./intermediate_files/phylogeny/SEPP_inserted_tree_rooted_SILVA_nonExtract.qza \
+--output-path ./intermediate_files/phylogeny/SEPP_inserted_tree_rooted_SILVA_nonExtract
+qiime tools export \
+--input-path ./intermediate_files/phylogeny/SEPP_placements_SILVA_nonExtract.qza \
+--output-path ./intermediate_files/phylogeny/SEPP_placements_SILVA_nonExtract
 
 # Citation
 #Phylogenetic Placement of Exact Amplicon Sequences Improves Associations with Clinical Information. Stefan Janssen, Daniel McDonald, Antonio Gonzalez, Jose A. Navas-Molina, Lingjing Jiang, Zhenjiang Zech Xu, Kevin Winker, Deborah M. Kado, Eric Orwoll, Mark Manary, Siavash Mirarab, Rob Knight. mSystems 2018. doi: https://doi.org/10.1128/mSystems.00021-18
